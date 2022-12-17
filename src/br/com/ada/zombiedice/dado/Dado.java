@@ -26,4 +26,6 @@ public abstract class Dado {
     public void resetFaceSorteada() {
         this.faceSorteada = null;
     }
+
+    public abstract TipoDado getTipoDado();
 }

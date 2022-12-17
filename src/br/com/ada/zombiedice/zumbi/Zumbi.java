@@ -1,5 +1,11 @@
 package br.com.ada.zombiedice.zumbi;
 
+import br.com.ada.zombiedice.dado.Dado;
+import br.com.ada.zombiedice.pote.PoteDado;
+
+import java.util.ArrayList;
+import java.util.List;
+
 public class Zumbi {
 
     private String nome;
@@ -30,5 +36,20 @@ public class Zumbi {
 
     public void setQtdeTiros(int qtdeTiros) {
         this.qtdeTiros = qtdeTiros;
+    }
+
+    public List<Dado> lancarDado(PoteDado pote, List<Dado> dadosSortearamPassosNaJogadaAnterior) {
+       int qtdeNecessario = 3 - dadosSortearamPassosNaJogadaAnterior.size();
+       pote.embaralhar();
+       List<Dado> dadosDoPote = pote.entregarDado(qtdeNecessario);
+       List<Dado> dadosDisponiveis = new ArrayList<>(dadosDoPote);
+       dadosDisponiveis.addAll(dadosSortearamPassosNaJogadaAnterior);
+       for (Dado dado: dadosDisponiveis) {
+           dado.jogar();
+       }
+        return dadosDisponiveis;
+
+
+
     }
 }

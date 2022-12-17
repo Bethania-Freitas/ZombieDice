@@ -12,4 +12,9 @@ public class DadoVermelho extends Dado{
                 Face.TIRO,
         });
     }
+
+    @Override
+    public TipoDado getTipoDado() {
+        return TipoDado.VERMELHO;
+    }
 }
