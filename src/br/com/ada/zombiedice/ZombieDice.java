@@ -22,12 +22,24 @@ public class ZombieDice {
         posicaoJogadorNaLista = 0;
     }
 
+    public static void main(String[] args) {
+        ZombieDice dice = new ZombieDice();
+        System.out.println("      ▐███████▌");
+        System.out.println("      ▐░▀░▀░▀░▌");
+        System.out.println("      ▐▄▄▄▄▄▄▄▌");
+        System.out.println("▄▀▀▀█▒▐░▀▀▄▀▀░▌▒█▀▀▀▄");
+        System.out.println("▌▌▌▌▐▒▄▌░▄▄▄░▐▄▒▌▐▐▐▐");
+        System.out.println("Z O M B I E  D I C E");
+        System.out.println();
+        dice.iniciarPartida();
+    }
+
     public void cadastrarJogadores() {
         Scanner scanner = new Scanner(System.in);
         String continuarCadastrar = "n";
 
         do {
-            System.out.println("Qual o nome do jogador: ");
+            System.out.println("Cadastre o nome do jogador: ");
             String nome = scanner.nextLine();
             Zumbi jogador = new Zumbi(nome);
             jogadores.add(jogador);
@@ -39,34 +51,42 @@ public class ZombieDice {
     public void iniciarPartida() {
         cadastrarJogadores();
         if (jogadores.size() < 2) {
-            System.out.println("É preciso o mínimo de 2 jogares para iniciar a partida");
+            System.out.println("Você deve cadastrar no minimo 2 jogadores");
             cadastrarJogadores();
         }
         PoteDado pote = criarPote();
+
         boolean continuarJogando = true;
         do {
             Zumbi jogadorAtual = jogadores.get(posicaoJogadorNaLista);
             Turno turnoAtual = new Turno(jogadorAtual, pote);
             turnoAtual.jogar();
-            System.out.println("------------------");
-            
+            System.out.println();
+            System.out.println("------------- CEREBROS CONSUMIDOS --------------");
+            placar();
+            System.out.println();
             continuarJogando = jogadorAtual.getQtdeCerebros() < 13;
             if (continuarJogando) {
                 posicaoJogadorNaLista++;
-                if (posicaoJogadorNaLista >= jogadores.size()){
+                if (posicaoJogadorNaLista >= jogadores.size()) {
                     posicaoJogadorNaLista = 0;
                 }
-                parabenizarJogador(jogadorAtual);
             } else {
                 parabenizarJogador(jogadorAtual);
             }
-        } while (!continuarJogando);
-        System.out.println("Fim de Jogo");
+        } while (continuarJogando);
+        System.out.println("Fim de jogo!");
     }
 
-    public void parabenizarJogador(Zumbi jogador){
-        System.out.println("Parabens" + jogador.getNome() +
-                ", você consumiu 13 cerebros");
+    public void parabenizarJogador(Zumbi jogador) {
+        System.out.println();
+        System.out.println("      ▐███████▌");
+        System.out.println("      ▐░▀░▀░▀░▌");
+        System.out.println("      ▐▄▄▄▄▄▄▄▌");
+        System.out.println("▄▀▀▀█▒▐░▀▀▄▀▀░▌▒█▀▀▀▄");
+        System.out.println("▌▌▌▌▐▒▄▌░▄▄▄░▐▄▒▌▐▐▐▐");
+        System.out.println(" P A R A B É N S !  " + jogador.getNome().toUpperCase()+ " ");
+        System.out.println("você consumiu 13 CEREBROS");
     }
 
     public PoteDado criarPote() {
@@ -88,9 +108,10 @@ public class ZombieDice {
         return pote;
     }
 
-    public static void main(String[] args) {
-        ZombieDice dice = new ZombieDice();
-        dice.iniciarPartida();
+    public void placar() {
+        for (Zumbi jogador : this.jogadores) {
+            System.out.println(jogador.getQtdeCerebros() + " - " + jogador.getNome());
+        }
     }
 }
 

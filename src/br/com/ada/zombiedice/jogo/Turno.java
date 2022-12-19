@@ -5,6 +5,7 @@ import br.com.ada.zombiedice.dado.Face;
 import br.com.ada.zombiedice.pote.PoteDado;
 import br.com.ada.zombiedice.zumbi.Zumbi;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
@@ -28,57 +29,70 @@ public class Turno {
     public void jogar() {
         Scanner scanner = new Scanner(System.in);
         String continuarJogando = "n";
-        List<Dado> dadosASeeremRelancados = new ArrayList<>();
+        ArrayList<Dado> dadosASeremRelancados = new ArrayList<>();
+        System.out.println(jogador.getNome() + " é sua vez!");
+        promptEnterKey();
         do {
-            System.out.println("Zumbie " + jogador.getNome()+" é a sua vez!");
-            List<Dado> dadosLancados = jogador.lancarDado(pote, dadosASeeremRelancados);
-            dadosASeeremRelancados.clear();
+            List<Dado> dadosLancados = jogador.lancarDados(pote, dadosASeremRelancados);
+            dadosASeremRelancados.clear();
             for (Dado dado : dadosLancados) {
-                System.out.println("Você lançou o dado " + dado.getTipoDado() +
-                        " e obteve o resultado " + dado.getFaceSorteada());
                 boolean dadoContabilizado = contabilizarDadoJogado(dado);
-                if (!dadoContabilizado){
-                    dadosASeeremRelancados.add(dado);
+                if (!dadoContabilizado) {
+                    dadosASeremRelancados.add(dado);
                 }
             }
-            boolean forcarEncerramento = forcarEncerramentoDeTurno();
-            if (forcarEncerramento){
-                if(qtdeTiros < 3){
-                    System.out.println("Turno encerrado, pois você consumiu 13 cerebros");
+            boolean forcarEncerramento = forcarEncerramentoTurno();
+            if (forcarEncerramento) {
+                if (qtdeTiros < 3) {
+                    System.out.println("------------------------------------------------------");
+                    System.out.println("Turno será encerrado pois você atingiu 13 cerebros consumidos");
                 } else {
-                    System.out.println("Turno encerrado, você levou 3 tiros!");
-                    break;
+                    System.out.println(" /﹋\\");
+                    System.out.println("(҂`_´)");
+                    System.out.println("<,︻╦╤─ ҉ - -");
+                    System.out.println("/﹋\\");
+                    System.out.println("TURNO ENCERRADO  !");
+                    System.out.println("você levou " + qtdeTiros + " tiros");
                 }
+                break;
             }
-            System.out.println(jogador.getNome()+", você tem nesta rodada " + qtdeCerebros + " cerebros e "+ qtdeTiros + " tiros");
-            System.out.println(jogador.getNome() +", deseja continuar jogando?(s/n)");
+            System.out.println("Pontuação atual: " +  qtdeCerebros +
+                    " cerebros consumidos, " + qtdeTiros + " tiros levados");
+            System.out.println("------------------------------------------------------");
+            System.out.println(jogador.getNome() + " deseja jogar novamente?(s/n)");
             continuarJogando = scanner.nextLine();
         } while (continuarJogando.equalsIgnoreCase("s"));
         contabilizarTurno();
         pote.devolverDado(dadosUtilizadosNoTurno);
-        pote.devolverDado(dadosASeeremRelancados);
+        pote.devolverDado(dadosASeremRelancados);
     }
 
-    private boolean forcarEncerramentoDeTurno() {
+    private void promptEnterKey() {
+        System.out.println("Aperte ENTER para jogar");
+        try {
+            System.in.read();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 
+    private boolean forcarEncerramentoTurno() {
         return qtdeTiros >= 3 || jogador.getQtdeCerebros() + qtdeCerebros >= 13;
     }
 
     private boolean contabilizarDadoJogado(Dado dado) {
-        boolean contablizado = dado.getFaceSorteada() != Face.PASSOS;
-        if ( contablizado) {
+        System.out.println("Você lançou o dado " + dado.getTipoDado() +
+                " e obteve o resultado " + dado.getFaceSorteada());
+        boolean contabilizado = dado.getFaceSorteada() != Face.PASSOS;
+        if (contabilizado) {
             dadosUtilizadosNoTurno.add(dado);
             if (dado.getFaceSorteada() == Face.CEREBRO) {
-                System.out.println("Você consumiu mais um cerebro");
-            qtdeCerebros++;
+                qtdeCerebros++;
             } else {
-                System.out.println("Você levou um tiro");
                 qtdeTiros++;
             }
-        } else {
-            System.out.println("Sua presa fugiu");
         }
-        return contablizado;
+        return contabilizado;
     }
 
     private void contabilizarTurno() {
@@ -86,9 +100,8 @@ public class Turno {
             int qtdeCerebrosAtual = jogador.getQtdeCerebros();
             int novaQtdeCerebrosConsumidos = qtdeCerebrosAtual + qtdeCerebros;
             jogador.setQtdeCerebros(novaQtdeCerebrosConsumidos);
-            System.out.println("Contabilizado turno do jogador: " + jogador.getNome() +
-                    ", encerrado com um total de " + novaQtdeCerebrosConsumidos +
-                    " cerebros consumidos");
+            System.out.println("Contabilizado turno do jogador: ");
+            System.out.println(jogador.getNome() + " - " + novaQtdeCerebrosConsumidos + " cerebros consumidos no turno");
         }
     }
 }

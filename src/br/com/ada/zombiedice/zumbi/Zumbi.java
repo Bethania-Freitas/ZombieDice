@@ -38,18 +38,17 @@ public class Zumbi {
         this.qtdeTiros = qtdeTiros;
     }
 
-    public List<Dado> lancarDado(PoteDado pote, List<Dado> dadosSortearamPassosNaJogadaAnterior) {
-       int qtdeNecessario = 3 - dadosSortearamPassosNaJogadaAnterior.size();
-       pote.embaralhar();
-       List<Dado> dadosDoPote = pote.entregarDado(qtdeNecessario);
-       List<Dado> dadosDisponiveis = new ArrayList<>(dadosDoPote);
-       dadosDisponiveis.addAll(dadosSortearamPassosNaJogadaAnterior);
-       for (Dado dado: dadosDisponiveis) {
-           dado.jogar();
-       }
+    public List<Dado> lancarDados(PoteDado pote, List<Dado> dadosSortearamPassosNaJogadaAnterior) {
+        //3 quantidade base de dados
+        int qtdeNecessario = 3 - dadosSortearamPassosNaJogadaAnterior.size();
+        pote.embaralhar();
+        List<Dado> dadosDoPote = pote.entregarDado(qtdeNecessario);
+        List<Dado> dadosDisponiveis = new ArrayList<>(dadosDoPote);
+        dadosDisponiveis.addAll(dadosSortearamPassosNaJogadaAnterior);
+        for (Dado dado: dadosDisponiveis) {
+            dado.jogar();
+        }
         return dadosDisponiveis;
-
-
-
     }
-}
+    }
+
